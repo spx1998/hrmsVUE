@@ -4,7 +4,7 @@
             <!--      <el-col :span="4" v-for="project in allprojects" :key="project.pid" :offset="1">-->
             <el-col :span="6" v-for="(o, index) in 9" :key="o" :offset="0"  style="margin-bottom:50px">
                 <el-card :body-style="{ padding: '0px' }" class="card" shadow="always" @click="">
-                    <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+                    <img src="http://39.106.81.211:81/picture/hrms-home-1.png"
                          class="image" alt="">
                     <div class="cardTitle">
                         好吃的汉堡
@@ -19,11 +19,11 @@
 <script>
     export default {
         name: "home",
-        beforeCreate () {
-            document.querySelector('body').setAttribute('style', 'background:#e6e7e4')
+        data(){
+
         },
-        beforeDestroy () {
-            document.querySelector('body').setAttribute('style', '')
+        method:{
+
         }
     }
 </script>

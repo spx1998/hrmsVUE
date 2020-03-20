@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from "../components/login";
 import home from "../components/home";
 import forgetPwd from "../components/forgetPwd";
+import navigation from "@/components/navigation";
 Vue.use(Router);
 const index = [
     {
@@ -19,6 +20,12 @@ const index = [
         path:'/forgetPwd',
         name:'forgetPwd',
         component:forgetPwd,
+    },
+    {
+        path:'/navigation',
+        name:'navigation',
+        component:navigation,
+
     }
 ];
 export default new Router({

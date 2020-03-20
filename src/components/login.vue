@@ -22,6 +22,8 @@
     </div>
 </template>
 <script>
+    import {Decrypt, Encrypt} from '../crypto'
+
     export default {
         data() {
             return {
@@ -42,9 +44,10 @@
         methods: {
             login(loginForm) {
                 let that = this;
+
                 this.$refs[loginForm].validate((valid) => {
                     if (valid) {
-                        this.$http.post('/login', "account=" + that.loginForm.account + "&password=" + that.loginForm.password)
+                        this.$http.post('/login', "account=" + that.loginForm.account + "&password=" + Encrypt(that.loginForm.password))
                             .then(function (res) {
                                 if (res.data.status === 'ok') {
                                     sessionStorage.setItem("token", res.data.content);
