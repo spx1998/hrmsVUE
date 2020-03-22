@@ -121,7 +121,7 @@
                                 that.$message({
                                     message:'修改密码成功！',
                                     type:'success'
-                                })
+                                });
                                 setTimeout(()=>{
                                     that.$router.push(login);
                                 },1000);
