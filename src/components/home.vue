@@ -3,8 +3,9 @@
 
         <el-row>
             <!--      <el-col :span="4" v-for="project in allprojects" :key="project.pid" :offset="1">-->
-            <el-col :span="6" v-for="data in homeData" :key="data.moduleId" :offset="0" style="margin-bottom:50px" >
-                <el-card :body-style="{ padding: '0px' }" class="card" shadow="always" @click.native="navigateTo(data.moduleId)">
+            <el-col :span="6" v-for="data in homeData" :key="data.moduleId" :offset="0" style="margin-bottom:50px">
+                <el-card :body-style="{ padding: '0px' }" class="card" shadow="always"
+                         @click.native="navigateTo(data.name)">
                     <img :src="data.url"
                          class="image" alt="">
                     <div class="cardTitle">
@@ -20,23 +21,22 @@
 <script>
     export default {
         name: "home",
-        beforeCreate () {
+        beforeCreate() {
             document.querySelector('body').setAttribute('style', 'background:#e6e7e4')
         },
-        beforeDestroy () {
+        beforeDestroy() {
             document.querySelector('body').setAttribute('style', '')
         },
-            data() {
+        data() {
             return {
-                preUrl:'http://39.106.81.211:81',
+                preUrl: 'http://39.106.81.211:81',
                 homeData: [],
 
             }
         },
         methods: {
-            navigateTo(moduleId){
-                console.log(moduleId);
-                this.$router.push(""+moduleId);
+            navigateTo(name) {
+                this.$router.push(name);
             }
         },
         mounted: function () {
@@ -44,14 +44,15 @@
             this.$http.get("/home").then(function (res) {
                 if (res.data.status === 'ok') {
                     let data = JSON.parse(res.data.content);
-                    for(let i=0;i<data.length;i++){
-                        data[i].url=that.preUrl+data[i].url;
+                    for (let i = 0; i < data.length; i++) {
+                        data[i].url = that.preUrl + data[i].url;
                     }
                     that.homeData = data;
-                }else {
+                } else {
                     that.$alert("加载出错，将为您退出登录，请您稍后再试。");
                 }
             });
+
         }
     }
 </script>
@@ -69,8 +70,8 @@
     }
 
     .image {
-        width:290px;
-        height:290px;
+        width: 290px;
+        height: 290px;
         display: block;
         margin: auto;
     }
