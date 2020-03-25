@@ -4,7 +4,7 @@ import login from "../components/login";
 import home from "../components/home";
 import forgetPwd from "../components/forgetPwd";
 import navigation from "@/components/navigation";
-import StaffBaseInfo from "@/components/StaffBaseInfo";
+import StaffBaseInfo from "@/components/infomation/StaffBaseInfo";
 Vue.use(Router);
 const index = [
     {
