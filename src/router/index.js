@@ -6,6 +6,7 @@ import forgetPwd from "../components/forgetPwd";
 import navigation from "@/components/navigation";
 import StaffBaseInfo from "@/components/infomation/StaffBaseInfo";
 import StaffCareerInfo from "@/components/infomation/StaffCareerInfo";
+import StaffList from "@/components/personnel/StaffList";
 Vue.use(Router);
 const index = [
     {
@@ -43,6 +44,16 @@ const index = [
                 path:'/careerinfo',
                 name:'StaffCareerInfo',
                 component:StaffCareerInfo,
+            },
+            {
+                path:'/stafflist',
+                name:'StaffList',
+                component:StaffList,
+            },
+            {
+                path:'/员工管理',
+                name:'StaffList',
+                component:StaffList,
             }
         ]
     }

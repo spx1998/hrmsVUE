@@ -42,7 +42,7 @@
 
 <script>
     import login from "@/components/login";
-
+    import {Decrypt, Encrypt} from '../crypto'
     export default {
         name: "forgetPwd",
         data() {
@@ -114,7 +114,7 @@
                             'staffId':that.forgetForm.staffId,
                             'username':that.forgetForm.username,
                             'email':that.forgetForm.email,
-                            'newPwd':that.forgetForm.newPwd,
+                            'newPwd':Encrypt(that.forgetForm.newPwd),
                             'CAPTCHA':that.forgetForm.CAPTCHA,
                         }).then(function (res) {
                             if(res.data.status==='ok'){

@@ -26,10 +26,14 @@
                     <el-form-item label="手机号">
                         <el-input v-model="baseInfo.phoneNumber" disabled auto-complete="off"></el-input>
                     </el-form-item>
+                    <el-form-item label="住址" prop="address">
+                        <el-input v-model="baseInfo.address" disabled type="textarea" :rows="4"
+                                  auto-complete="off"></el-input>
+                    </el-form-item>
                     <el-form-item>
                         <div style="text-align:center">
                             <el-button type="primary" @click="showUpdateForm=true">修改资料</el-button>
-                            <i class="el-icon-warning-outline" style="margin-left: 8px" @click="question"></i>
+                            <el-button type="text" circle icon="el-icon-info" @click="question"></el-button>
                         </div>
                     </el-form-item>
                 </el-form>
@@ -56,6 +60,9 @@
                 <el-form-item label="手机号" prop="phoneNumber">
                     <el-input v-model="updateForm.phoneNumber" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="住址" prop="address">
+                    <el-input v-model="updateForm.address" type="textarea" :rows="4" auto-complete="off"></el-input>
+                </el-form-item>
 
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -68,6 +75,7 @@
 
 <script>
     import DateUtils from '../../FormatDate';
+
     export default {
         name: "StaffBaseInfo",
         data() {
@@ -93,11 +101,12 @@
                     sex: '',
                     birthday: '',
                     email: '',
-                    phoneNumber: ''
-
+                    phoneNumber: '',
+                    address: ''
                 },
                 rules: {
                     phoneNumber: [
+                        {required: true, message: '请输入手机号', trigger: 'blur'},
                         {validator: checkPhone, trigger: 'blur'}
                     ],
                     email: [
@@ -112,17 +121,20 @@
                 let that = this;
                 this.$refs[updateForm].validate((valid) => {
                     if (valid) {
-                        if(that.updateForm.email===that.baseInfo.email&&that.updateForm.phoneNumber===that.baseInfo.phoneNumber){
+                        if (that.updateForm.email === that.baseInfo.email && that.updateForm.phoneNumber === that.baseInfo.phoneNumber && that.updateForm.address === that.baseInfo.address) {
+                            that.showUpdateForm = false;
                             return;
                         }
-                        that.$http.post('/info/base/update',{
-                            'staffId':that.updateForm.staffId,
-                            'email':that.updateForm.email,
-                            'phoneNumber':that.updateForm.phoneNumber,
+                        that.$http.post('/info/base/update', {
+                            'staffId': that.updateForm.staffId,
+                            'email': that.updateForm.email,
+                            'phoneNumber': that.updateForm.phoneNumber,
+                            'address': that.updateForm.address,
                         }).then(function (res) {
-                            if(res.data.status==='ok'){
+                            if (res.data.status === 'ok') {
                                 //TODO:刷新界面的方法
-                            }else {
+                                that.showUpdateForm = false;
+                            } else {
                                 that.$message("修改失败，请稍后再试。");
                             }
                         })
@@ -134,7 +146,7 @@
                     title: '修改说明',
                     dangerouslyUseHTMLString: true,
                     message: '1.此处修改的邮箱仅为联系邮箱，账号密码的绑定邮箱不会修改。<br/>' +
-                        '2.修改邮箱与电话号码之外的信息请与部门hr联系。',
+                        '2.修改邮箱、地址与电话号码之外的信息请与部门hr联系。',
                     duration: 8000
                 });
             }
@@ -150,7 +162,7 @@
                         data.sex = '女';
                     }
 
-                    data.birthday=DateUtils.FormatDate(data.birthday);
+                    data.birthday = DateUtils.FormatDate(data.birthday);
                     that.baseInfo = data;
                     that.updateForm = JSON.parse(JSON.stringify(that.baseInfo));
                 } else {
