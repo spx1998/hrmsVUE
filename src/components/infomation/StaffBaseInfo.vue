@@ -63,7 +63,6 @@
                 <el-form-item label="住址" prop="address">
                     <el-input v-model="updateForm.address" type="textarea" :rows="4" auto-complete="off"></el-input>
                 </el-form-item>
-
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="showUpdateForm = false">取 消</el-button>
@@ -156,7 +155,7 @@
             this.$http.get('/info/base').then(function (res) {
                 if (res.data.status === 'ok') {
                     let data = JSON.parse(res.data.content);
-                    if (data.sex === "0") {
+                    if (data.sex === "0" || data.sex === 0) {
                         data.sex = '男';
                     } else {
                         data.sex = '女';

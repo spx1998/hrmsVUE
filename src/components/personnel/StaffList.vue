@@ -26,8 +26,8 @@
                         prop="departmentName"
                         label="部门"
                         width="150"
-                        :filters="departmentList"
-                        :filter-method="filter"
+                        :filters="departmentFilterList"
+                        :filter-method="staffFilter"
                         filter-placement="bottom-end">
                 </el-table-column>
                 <el-table-column
@@ -61,8 +61,8 @@
                             </el-col>
                         </el-row>
                     </template>
-                    <template slot-scope="scope" >
-                            <el-button @click="staffDetail(scope.row)" style="margin-right: 15px;">详情</el-button>
+                    <template slot-scope="scope">
+                        <el-button @click="staffDetail(scope.row)" style="margin-right: 15px;">详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -79,11 +79,12 @@
                 staffList: [],
                 staffListData: [],
                 departmentList: [],
-                staffInfo:{},
+                departmentFilterList: [],
+                staffInfo: {},
             }
         },
         methods: {
-            filter(value, row) {
+            staffFilter(value, row) {
                 return row.departmentId === value;
             },
             searchStaff() {
@@ -103,32 +104,36 @@
                 this.search = '';
             },
             staffDetail(row) {
-                let that = this;
-                this.$http.get('/staff/info?staffId='+row.staffId).then(function (res) {
-                    if (res.data.status === 'ok') {
-                        that.staffInfo= JSON.parse(res.data.content);
-                    } else {
-                        that.$message("加载出错，请稍后再试。");
-                    }
+                this.$router.push({
+                    path: `/staffDetail/${row.staffId}`,
                 });
             },
         },
         mounted: function () {
             let that = this;
-            this.$http.get("/staff/list",).then(function (res) {
-                if (res.data.status === 'ok') {
-                    that.staffListData = JSON.parse(res.data.content);
-                    that.staffList = JSON.parse(res.data.content);
-                } else {
-                    that.$message("加载出错，请稍后再试。");
-                }
-            });
             this.$http.get("/staff/department/list",).then(function (res) {
                 if (res.data.status === 'ok') {
                     let data = JSON.parse(res.data.content);
                     for (let i = 0; i < data.length; i++) {
-                        that.departmentList[i] = {'value': data[i].departmentId, 'text': data[i].name};
+                        that.departmentFilterList[i] = {'value': data[i].departmentId, 'text': data[i].name};
                     }
+                    that.departmentList = data;
+                } else {
+                    that.$message("加载出错，请稍后再试。");
+                }
+            });
+            this.$http.get("/staff/list",).then(function (res) {
+                if (res.data.status === 'ok') {
+                    let data = JSON.parse(res.data.content);
+                    for (let i = 0; i < data.length; i++) {
+                        for (let j = 0; j < that.departmentList.length; j++) {
+                            if (data[i].departmentId === that.departmentList[j].departmentId) {
+                                data[i].departmentName = that.departmentList[j].name;
+                            }
+                        }
+                    }
+                    that.staffListData = JSON.parse(JSON.stringify(data));
+                    that.staffList = JSON.parse(JSON.stringify(data));
                 } else {
                     that.$message("加载出错，请稍后再试。");
                 }
