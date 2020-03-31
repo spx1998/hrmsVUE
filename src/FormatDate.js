@@ -4,11 +4,13 @@ let DateUtils = {
      * @return {string}
      */
     FormatDate: function FormatDate(dateStr) {
-        dateStr = dateStr + "年";
-        dateStr = dateStr.replace(',', '日');
-        let date = dateStr.split(" ");
-        date[0] = this.ChineseToNumber(date[0].replace("月", "")) + "月";
-        dateStr = date[2] + date[0] + date[1];
+        let data = dateStr.split('-');
+        dateStr = data[0]+'年'+data[1]+'月'+data[2]+'日';
+        // dateStr = dateStr + "年";
+        // dateStr = dateStr.replace(',', '日');
+        // let date = dateStr.split(" ");
+        // date[0] = this.ChineseToNumber(date[0].replace("月", "")) + "月";
+        // dateStr = date[2] + date[0] + date[1];
         return dateStr;
     },
 

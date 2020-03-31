@@ -9,6 +9,7 @@ import StaffCareerInfo from "@/components/infomation/StaffCareerInfo";
 import StaffList from "@/components/personnel/StaffList";
 import StaffDetail from "@/components/personnel/StaffDetail";
 import StaffTransfer from "@/components/personnel/StaffTransfer";
+import Department from "@/components/hrms/Department";
 Vue.use(Router);
 const index = [
     {
@@ -66,6 +67,16 @@ const index = [
                 path:'/stafftransfer',
                 name:'StaffTransfer',
                 component:StaffTransfer,
+            },
+            {
+                path:'/HRMS管理',
+                name:'Department',
+                component:Department,
+            },
+            {
+                path:'/department',
+                name:'Department',
+                component:Department,
             }
         ]
     }
