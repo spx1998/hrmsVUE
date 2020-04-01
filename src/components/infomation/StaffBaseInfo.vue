@@ -39,7 +39,11 @@
                 </el-form>
             </div>
         </div>
-        <el-dialog title="修改资料" :visible.sync="showUpdateForm" :close-on-click-modal="false" width="35%">
+        <el-dialog title="修改资料"
+                   :visible.sync="showUpdateForm"
+                   @close="showUpdateForm=false,resetForm()"
+                   :close-on-click-modal="false"
+                   width="35%">
             <el-form :model="updateForm" ref="updateForm" :rules="rules" label-width="100px"
                      style="padding:25px;">
                 <el-form-item label="职工号">
@@ -116,6 +120,10 @@
             }
         },
         methods: {
+            resetForm(){
+                this.$refs.updateForm.clearValidate();
+                this.$refs.updateForm.resetFields();
+            },
             updateBaseInfo(updateForm) {
                 let that = this;
                 this.$refs[updateForm].validate((valid) => {

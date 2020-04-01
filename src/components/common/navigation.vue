@@ -69,7 +69,7 @@
 </template>
 
 <script>
-    import {Decrypt, Encrypt} from '../crypto';
+    import {Decrypt, Encrypt} from '../../crypto';
 
     export default {
         name: "navigation",
@@ -151,8 +151,8 @@
 </script>
 
 <style scoped>
-    @import "../assets/css/nav.css";
-    @import "../assets/font/iconfont.css";
+    @import "../../assets/css/nav.css";
+    @import "../../assets/font/iconfont.css";
 
     .page {
         display: flex;

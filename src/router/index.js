@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import login from "../components/login";
-import home from "../components/home";
-import forgetPwd from "../components/forgetPwd";
-import navigation from "@/components/navigation";
+import login from "../components/common/login";
+import home from "../components/common/home";
+import forgetPwd from "../components/common/forgetPwd";
+import navigation from "@/components/common/navigation";
 import StaffBaseInfo from "@/components/infomation/StaffBaseInfo";
 import StaffCareerInfo from "@/components/infomation/StaffCareerInfo";
 import StaffList from "@/components/personnel/StaffList";
 import StaffDetail from "@/components/personnel/StaffDetail";
 import StaffTransfer from "@/components/personnel/StaffTransfer";
 import Department from "@/components/hrms/Department";
+import Authority from "@/components/hrms/Authority";
 Vue.use(Router);
 const index = [
     {
@@ -77,6 +78,10 @@ const index = [
                 path:'/department',
                 name:'Department',
                 component:Department,
+            }, {
+                path:'/authority',
+                name:'Authority',
+                component:Authority,
             }
         ]
     }

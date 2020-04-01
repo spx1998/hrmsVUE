@@ -22,7 +22,7 @@
     </div>
 </template>
 <script>
-    import {Decrypt, Encrypt} from '../crypto'
+    import {Decrypt, Encrypt} from '../../crypto'
 
     export default {
         data() {

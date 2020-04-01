@@ -41,8 +41,8 @@
 </template>
 
 <script>
-    import login from "@/components/login";
-    import {Decrypt, Encrypt} from '../crypto'
+    import login from "@/components/common/login";
+    import {Decrypt, Encrypt} from '../../crypto'
     export default {
         name: "forgetPwd",
         data() {
