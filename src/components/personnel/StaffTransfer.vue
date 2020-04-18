@@ -11,12 +11,12 @@
                     <el-collapse accordion value="NewStaffList">
                         <el-collapse-item title="创建员工信息" name="CreateNewStaff">
                             <el-form :model="createForm" ref="createForm" label-width="100px" :rules="rules"
-                                     style="width: 500px">
+                                     :hide-required-asterisk=true style="width: 500px">
                                 <el-form-item label="姓名" prop="name">
                                     <el-input v-model="createForm.name" auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="性别" prop="sex">
-                                    <el-select v-model="createForm.sex" placeholder="请选择">
+                                    <el-select v-model="createForm.sex" style="width: 400px">
                                         <el-option
                                                 v-for="item in sexList"
                                                 :key="item.value"
@@ -30,11 +30,27 @@
                                             v-model="createForm.birthday"
                                             value-format="yyyy-MM-dd"
                                             type="date"
-                                            placeholder="选择日期">
+                                            placeholder="选择日期"
+                                            style="width: 400px">
                                     </el-date-picker>
                                 </el-form-item>
+                                <el-form-item label="民族" prop="nation">
+                                    <el-input v-model="createForm.nation" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="政治面貌" prop="politicalStatus">
+                                    <el-input v-model="createForm.politicalStatus" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="学历" prop="education">
+                                    <el-input v-model="createForm.education" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="毕业院校" prop="school">
+                                    <el-input v-model="createForm.school" auto-complete="off"></el-input>
+                                </el-form-item>
+
                                 <el-form-item label="部门" prop="departmentId">
-                                    <el-select v-model="createForm.departmentId" placeholder="请选择">
+                                    <el-select v-model="createForm.departmentId"
+                                               @change="updateDepartmentJobList"
+                                               placeholder="请选择" style="width: 400px">
                                         <el-option
                                                 v-for="item in departmentList"
                                                 :key="item.departmentId"
@@ -44,7 +60,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="类型" prop="type">
-                                    <el-select v-model="createForm.type" placeholder="请选择">
+                                    <el-select v-model="createForm.type" placeholder="请选择" style="width: 400px">
                                         <el-option
                                                 v-for="item in typeList"
                                                 :key="item.value"
@@ -53,8 +69,19 @@
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
+                                <el-form-item label="职务" prop="jobId">
+                                    <el-select v-model="createForm.jobId"
+                                               @change="updateGrade" style="width: 400px">
+                                        <el-option
+                                                v-for="item in departmentJobList"
+                                                :key="item.id"
+                                                :label="item.name"
+                                                :value="item.id">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
                                 <el-form-item label="职级" prop="grade">
-                                    <el-input v-model="createForm.grade" auto-complete="off"></el-input>
+                                    <el-input v-model="createForm.grade" disabled auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="入职日期" prop="hireDate">
                                     <el-date-picker
@@ -62,7 +89,8 @@
                                             v-model="createForm.hireDate"
                                             value-format="yyyy-MM-dd"
                                             type="date"
-                                            placeholder="选择日期">
+                                            placeholder="选择日期"
+                                            style="width: 400px">
                                     </el-date-picker>
                                 </el-form-item>
                                 <el-form-item label="签约日期" prop="contractStart">
@@ -71,7 +99,8 @@
                                             v-model="createForm.contractStart"
                                             value-format="yyyy-MM-dd"
                                             type="date"
-                                            placeholder="选择日期">
+                                            placeholder="选择日期"
+                                            style="width: 400px">
                                     </el-date-picker>
                                 </el-form-item>
                                 <el-form-item label="合同年限" prop="contractLength">
@@ -90,7 +119,7 @@
                                               auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item>
-                                    <el-button type="primary" @click="createStaffInfo('createForm')">创建</el-button>
+                                    <el-button type="primary" @click="createStaffInfo('createForm')">创 建</el-button>
                                 </el-form-item>
                             </el-form>
                         </el-collapse-item>
@@ -136,18 +165,20 @@
                                 </el-table-column>
                                 <el-table-column align="right">
                                     <template slot-scope="scope">
+                                        <el-button plain @click="schedule(scope.row)"
+                                                   style="margin-right: 15px;">进 度
+                                        </el-button>
                                         <el-button type="danger" plain @click="staffDel(scope.row)"
-                                                   style="margin-right: 15px;">删除
+                                                   style="margin-right: 15px;">删 除
                                         </el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
-
                         </el-collapse-item>
                     </el-collapse>
                 </el-tab-pane>
                 <el-tab-pane label="员工调动">
-                    <el-collapse v-model="activeNames" @change="handleChange">
+                    <el-collapse>
                         <el-collapse-item title="一致性 Consistency" name="1">
 
                         </el-collapse-item>
@@ -157,9 +188,30 @@
                     </el-collapse>
                 </el-tab-pane>
                 <el-tab-pane label="员工离职">
-
                 </el-tab-pane>
             </el-tabs>
+            <el-dialog
+                    title="确认删除"
+                    :visible.sync="showDeleteDialog"
+                    width="30%">
+                <span>确认要删除{{deleteStaffId}}的信息吗？</span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="showDeleteDialog = false">取 消</el-button>
+                    <el-button type="danger" @click="confirmDelete">删 除</el-button></span>
+            </el-dialog>
+            <el-drawer
+                    title="入职进度"
+                    :visible.sync="drawer"
+                    direction="btt"
+                    :show-close=false>
+                <span>
+                    <el-steps :active="stepNumber" simple finish-status="success" style="width: 1000px;margin: auto">
+                        <el-step title="创建资料" description="建立新入职员工的档案资料。"></el-step>
+                        <el-step title="设定薪资"></el-step>
+                        <el-step title="激活账号"></el-step>
+                    </el-steps>
+                </span>
+            </el-drawer>
         </div>
     </div>
 </template>
@@ -181,6 +233,10 @@
                 }
             };
             return {
+                stepNumber: 1,
+                drawer: false,
+                deleteStaffId: '',
+                showDeleteDialog: false,
                 sexList: [{
                     value: '0',
                     label: '男'
@@ -195,7 +251,9 @@
                     value: '2',
                     label: '实习'
                 }],
+                jobList: [],
                 departmentList: [],
+                departmentJobList: [],
                 departmentFilterList: [],
                 createForm: {departmentId: ''},
                 pendingList: [],
@@ -209,14 +267,29 @@
                     birthday: [
                         {required: true, message: '请选择日期', trigger: 'blur'},
                     ],
+                    nation: [
+                        {required: true, message: '请输入民族', trigger: 'blur'},
+                    ],
+                    politicalStatus: [
+                        {required: true, message: '请输入政治面貌', trigger: 'blur'},
+                    ],
+                    education: [
+                        {required: true, message: '请输入学历', trigger: 'blur'},
+                    ],
+                    school: [
+                        {required: true, message: '请输入毕业院校', trigger: 'blur'},
+                    ],
                     departmentId: [
                         {required: true, message: '请选择部门', trigger: 'change'},
                     ],
                     type: [
                         {required: true, message: '请选择类型', trigger: 'change'},
                     ],
+                    jobId: [
+                        {required: true, message: '请选择职务', trigger: 'change'},
+                    ],
                     grade: [
-                        {required: true, message: '请输入职级', trigger: 'blur'},
+                        {required: true, message: ' ', trigger: 'blur'},
                     ],
                     hireDate: [
                         {required: true, message: '请选择入职日期', trigger: 'change'},
@@ -239,8 +312,34 @@
             }
         },
         methods: {
+            schedule(row) {
+                if (row.status === 'create') {
+                    this.stepNumber = 1;
+                } else if (row.status === 'pending') {
+                    this.stepNumber = 2;
+                } else this.stepNumber = 3;
+                this.drawer = true;
+            },
+            updateDepartmentJobList() {
+                let list = [];
+                for (let i = 0; i < this.jobList.length; i++) {
+                    if (this.jobList[i].departmentId === this.createForm.departmentId) {
+                        list.push(this.jobList[i]);
+                    }
+                }
+                this.departmentJobList = list;
+            },
+            updateGrade() {
+                let data;
+                for (let i = 0; i < this.departmentJobList.length; i++) {
+                    if (this.departmentJobList[i].id === this.createForm.jobId) {
+                        data = this.departmentJobList[i].grade;
+                        break;
+                    }
+                }
+                this.createForm.grade = data;
+            },
             createStaffInfo(createForm) {
-
                 let that = this;
                 this.$refs[createForm].validate((valid) => {
                     if (valid) {
@@ -248,8 +347,13 @@
                             'name': that.createForm.name,
                             'sex': that.createForm.sex,
                             'birthday': that.createForm.birthday,
+                            'nation': that.createForm.nation,
+                            'politicalStatus': that.createForm.politicalStatus,
+                            'education': that.createForm.education,
+                            'school': that.createForm.school,
                             'departmentId': that.createForm.departmentId,
                             'type': that.createForm.type,
+                            'jobId': that.createForm.jobId,
                             'grade': that.createForm.grade,
                             'hireDate': that.createForm.hireDate,
                             'contractStart': that.createForm.contractStart,
@@ -259,7 +363,7 @@
                             'address': that.createForm.address,
                         }).then(function (res) {
                                 if (res.data.status === 'ok') {
-                                    that.$message("创建成功。");
+                                    that.$message({message: "创建成功", type: "success"});
                                 } else {
                                     that.$message("创建出错，请稍后再试。");
                                 }
@@ -272,9 +376,9 @@
                 this.$set(this.createForm, 'contractStart', this.createForm.hireDate);
                 this.$set(this.createForm, 'contractLength', 3);
             },
-            staffDel(row) {
+            confirmDelete() {
                 let that = this;
-                this.$http.post('/staff/pending/del', {'staffId': row.staffId}).then(function (res) {
+                this.$http.post('/staff/pending/del', {'staffId': that.deleteStaffId}).then(function (res) {
                     if (res.data.status === 'ok') {
                         //TODO: 刷新组件
                         that.$message({
@@ -283,8 +387,12 @@
                         });
                     } else
                         that.$message("删除失败！");
-
                 });
+                this.showDeleteDialog = false;
+            },
+            staffDel(row) {
+                this.deleteStaffId = row.staffId;
+                this.showDeleteDialog = true;
             },
             pendingFilter(value, row) {
                 return row.departmentId === value;
@@ -292,6 +400,13 @@
         },
         mounted: function () {
             let that = this;
+            this.$http.get('/staff/job/list').then(function (res) {
+                if (res.data.status === 'ok') {
+                    that.jobList = JSON.parse(res.data.content);
+                } else {
+                    that.$message("加载出错，请稍后再试。");
+                }
+            });
             this.$http.get("/staff/department/list",).then(function (res) {
                 if (res.data.status === 'ok') {
                     let data = JSON.parse(res.data.content);

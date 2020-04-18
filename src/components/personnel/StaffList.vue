@@ -31,9 +31,8 @@
                         filter-placement="bottom-end">
                 </el-table-column>
                 <el-table-column
-                        prop="grade"
-                        sortable
-                        label="职级"
+                        prop="jobName"
+                        label="职务"
                         width="150">
                 </el-table-column>
                 <el-table-column

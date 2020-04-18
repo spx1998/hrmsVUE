@@ -4,7 +4,7 @@
             <div slot="header">
                 <span>&#12288;忘记密码</span>
             </div>
-            <el-form ref="forgetForm" :rules="rules" :model="forgetForm" label-width="80px">
+            <el-form ref="forgetForm" :rules="rules" :model="forgetForm" hide-required-asterisk="true" label-width="80px">
                 <el-form-item label="职工号" prop="staffId">
                     <el-input v-model="forgetForm.staffId" placeholder="请输入职工号"></el-input>
                 </el-form-item>
@@ -33,7 +33,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="changePwd('forgetForm')">修改密码</el-button>
-
+                    <el-button type="primary" plain @click="back">返 回</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -136,7 +136,10 @@
                         return false;
                     }
                 })
-            }
+            },
+            back(){
+                this.$router.push('/');
+            },
         }
     }
 </script>

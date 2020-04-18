@@ -17,8 +17,8 @@
                     <el-form-item label="部门">
                         <el-input v-model="careerInfo.departmentName" disabled auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="职级">
-                        <el-input v-model="careerInfo.grade" disabled auto-complete="off"></el-input>
+                    <el-form-item label="职务">
+                        <el-input v-model="careerInfo.jobName" disabled auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="入职日期">
                         <el-input v-model="careerInfo.hireDate" disabled auto-complete="off"></el-input>

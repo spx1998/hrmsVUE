@@ -4,87 +4,89 @@
             <b>HRMS管理</b>
             <i class="el-icon-arrow-right"></i>
             <b>部门管理</b>
-            <el-button plain style="float:right;height:40px;margin:20px 50px" @click="showCreateForm=true">新增部门
-            </el-button>
         </div>
         <div class="body">
-            <el-table
-                    :data="departmentList"
-                    stripe
-                    height="600"
-                    style="width: 100%">
-                <el-table-column
-                        prop="departmentId"
-                        label="部门编号"
-                        sortable
-                        width="200">
-                </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="部门名称"
-                        width="200">
-                </el-table-column>
-                <el-table-column
-                        prop="ministerName"
-                        label="主管"
-                        width="200">
-                </el-table-column>
-                <el-table-column
-                        prop="number"
-                        label="人数"
-                        sortable
-                        width="200">
-                </el-table-column>
-                <el-table-column
-                        prop="hrName"
-                        label="对接HR"
-                        width="200">
-                </el-table-column>
-                <el-table-column align="right" prop="button">
-                    <template scope="scope">
-                        <el-button plain @click="openChangeForm(scope.row)" style="margin-right: 55px;">修改</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <el-tabs v-model="tabs" type="card" style="padding: 10px">
+                <el-tab-pane label="部门列表" name="list">
+                    <el-table
+                            :data="departmentList"
+                            stripe
+                            height="600"
+                            style="width: 100%">
+                        <el-table-column
+                                prop="departmentId"
+                                label="部门编号"
+                                sortable
+                                width="200">
+                        </el-table-column>
+                        <el-table-column
+                                prop="name"
+                                label="部门名称"
+                                width="200">
+                        </el-table-column>
+                        <el-table-column
+                                prop="ministerName"
+                                label="主管"
+                                width="200">
+                        </el-table-column>
+                        <el-table-column
+                                prop="number"
+                                label="人数"
+                                sortable
+                                width="200">
+                        </el-table-column>
+                        <el-table-column
+                                prop="hrName"
+                                label="对接HR"
+                                width="200">
+                        </el-table-column>
+                        <el-table-column align="right" prop="button">
+                            <template scope="scope">
+                                <el-button plain @click="openChangeForm(scope.row)" style="margin-right: 55px;">修改
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="新增部门" name="add">
+                    <el-form :model="createForm" ref="createForm" :rules="rules" label-width="100px"
+                             :hide-required-asterisk=true style="width: 500px">
+                        <el-form-item label="部门名称" prop="name">
+                            <el-input v-model="createForm.name" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="分类" prop="type">
+                            <el-select v-model="createForm.type" placeholder="请选择" style="width: 400px">
+                                <el-option
+                                        v-for="item in typeList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="主管工号" prop="ministerId">
+                            <el-input v-model="createForm.ministerId" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="主管姓名" prop="ministerName">
+                            <el-input v-model="createForm.ministerName" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="HR工号" prop="hrId">
+                            <el-input v-model="createForm.hrId" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="HR姓名" prop="hrName">
+                            <el-input v-model="createForm.hrName" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button @click="tabs='list',resetForm('createForm')">取 消</el-button>
+                            <el-button type="primary" @click="createDepartment('createForm')">确 定</el-button>
+                        </el-form-item>
+
+                    </el-form>
+                </el-tab-pane>
+                <el-tab-pane label="职位管理" name="jobs">
+                </el-tab-pane>
+            </el-tabs>
         </div>
-        <el-dialog title="新增部门"
-                   :visible.sync="showCreateForm"
-                   :close-on-click-modal="false"
-                   @close="showCreateForm=false,resetForm('createForm')"
-                   width="35%">
-            <el-form :model="createForm" ref="createForm" :rules="rules" label-width="100px"
-                     style="padding:25px;">
-                <el-form-item label="部门名称" prop="name">
-                    <el-input v-model="createForm.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="分类" prop="type">
-                    <el-select v-model="createForm.type" placeholder="请选择">
-                        <el-option
-                                v-for="item in typeList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="主管工号" prop="ministerId">
-                    <el-input v-model="createForm.ministerId" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="主管姓名" prop="ministerName">
-                    <el-input v-model="createForm.ministerName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="HR工号" prop="hrId">
-                    <el-input v-model="createForm.hrId" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="HR姓名" prop="hrName">
-                    <el-input v-model="createForm.hrName" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="showCreateForm = false">取 消</el-button>
-                <el-button type="primary" @click="createDepartment('createForm')">确 定</el-button>
-            </div>
-        </el-dialog>
         <el-dialog title="修改Hr"
                    :visible.sync="showChangeForm"
                    :close-on-click-modal="false"
@@ -112,6 +114,7 @@
         name: "Department",
         data() {
             return {
+                tabs: 'list',
                 showCreateForm: false,
                 showChangeForm: false,
                 changeForm: {},
@@ -217,11 +220,11 @@
     }
 
     .body {
-
-        display: flex;
-        margin: 0;
-        background-color: rgb(255, 255, 255);
-        padding-left: 10px;
-        line-height: 80px;
+        background-color: #FFFFFF;
+        /* display: flex;
+         margin: 0;
+         background-color: rgb(255, 255, 255);
+         padding-left: 10px;
+         line-height: 80px;*/
     }
 </style>

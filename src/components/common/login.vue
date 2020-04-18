@@ -5,7 +5,7 @@
                 <span>&#12288;登录</span>
                 <el-button style="float: right; padding: 3px 0" type="text" @click="contactUs">联系我们</el-button>
             </div>
-            <el-form ref="loginForm" :rules="rules" :model="loginForm" label-width="55px">
+            <el-form ref="loginForm" :rules="rules" :model="loginForm" hide-required-asterisk="true" label-width="55px">
                 <el-form-item label="账号" prop="account">
                     <el-input v-model="loginForm.account" placeholder="请输入用户名或者职工号"></el-input>
                 </el-form-item>
@@ -22,7 +22,7 @@
     </div>
 </template>
 <script>
-    import {Decrypt, Encrypt} from '../../crypto'
+    import {Decrypt, Encrypt} from '@/crypto'
 
     export default {
         data() {
