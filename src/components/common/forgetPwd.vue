@@ -4,7 +4,7 @@
             <div slot="header">
                 <span>&#12288;忘记密码</span>
             </div>
-            <el-form ref="forgetForm" :rules="rules" :model="forgetForm" hide-required-asterisk="true" label-width="80px">
+            <el-form ref="forgetForm" :rules="rules" :model="forgetForm" hide-required-asterisk label-width="80px">
                 <el-form-item label="职工号" prop="staffId">
                     <el-input v-model="forgetForm.staffId" placeholder="请输入职工号"></el-input>
                 </el-form-item>
@@ -43,6 +43,7 @@
 <script>
     import login from "@/components/common/login";
     import {Decrypt, Encrypt} from '../../crypto'
+
     export default {
         name: "forgetPwd",
         data() {
@@ -110,25 +111,25 @@
                             this.$message({message: '两次输入的密码不同！', type: 'warning'});
                             return;
                         }
-                        that.$http.post('/pwd/forget',{
-                            'staffId':that.forgetForm.staffId,
-                            'username':that.forgetForm.username,
-                            'email':that.forgetForm.email,
-                            'newPwd':Encrypt(that.forgetForm.newPwd),
-                            'CAPTCHA':that.forgetForm.CAPTCHA,
+                        that.$http.post('/pwd/forget', {
+                            'staffId': that.forgetForm.staffId,
+                            'username': that.forgetForm.username,
+                            'email': that.forgetForm.email,
+                            'newPwd': Encrypt(that.forgetForm.newPwd),
+                            'CAPTCHA': that.forgetForm.CAPTCHA,
                         }).then(function (res) {
-                            if(res.data.status==='ok'){
+                            if (res.data.status === 'ok') {
                                 that.$message({
-                                    message:'修改密码成功！',
-                                    type:'success'
+                                    message: '修改密码成功！',
+                                    type: 'success'
                                 });
-                                setTimeout(()=>{
+                                setTimeout(() => {
                                     that.$router.push(login);
-                                },1000);
-                            }else if(res.data.status==='wrong'){
-                                that.$alert(res.data.content,"修改失败")
-                            }else{
-                                that.$alert("修改失败，请稍后再试。","修改失败")
+                                }, 1000);
+                            } else if (res.data.status === 'wrong') {
+                                that.$alert(res.data.content, "修改失败")
+                            } else {
+                                that.$alert("修改失败，请稍后再试。", "修改失败")
                             }
                         })
                     } else {
@@ -137,7 +138,7 @@
                     }
                 })
             },
-            back(){
+            back() {
                 this.$router.push('/');
             },
         }

@@ -5,13 +5,13 @@
             <i class="el-icon-arrow-right"></i>
             <b>人事管理</b>
         </div>
-        <div class="body">
-            <el-tabs type="card" style="padding: 10px">
+        <div class="body" style="overflow: scroll;">
+            <el-tabs type="card" style="padding: 10px" @tab-click="resetForms">
                 <el-tab-pane label="员工入职">
                     <el-collapse accordion value="NewStaffList">
                         <el-collapse-item title="创建员工信息" name="CreateNewStaff">
-                            <el-form :model="createForm" ref="createForm" label-width="100px" :rules="rules"
-                                     :hide-required-asterisk=true style="width: 500px">
+                            <el-form :model="createForm" ref="createForm" label-width="100px" :rules="createRules"
+                                     hide-required-asterisk style="width: 500px">
                                 <el-form-item label="姓名" prop="name">
                                     <el-input v-model="createForm.name" auto-complete="off"></el-input>
                                 </el-form-item>
@@ -46,7 +46,6 @@
                                 <el-form-item label="毕业院校" prop="school">
                                     <el-input v-model="createForm.school" auto-complete="off"></el-input>
                                 </el-form-item>
-
                                 <el-form-item label="部门" prop="departmentId">
                                     <el-select v-model="createForm.departmentId"
                                                @change="updateDepartmentJobList"
@@ -144,7 +143,7 @@
                                         label="部门"
                                         width="150"
                                         :filters="departmentFilterList"
-                                        :filter-method="pendingFilter"
+                                        :filter-method="departmentFilter"
                                         filter-placement="bottom-end">
                                 </el-table-column>
                                 <el-table-column
@@ -178,16 +177,108 @@
                     </el-collapse>
                 </el-tab-pane>
                 <el-tab-pane label="员工调动">
-                    <el-collapse>
-                        <el-collapse-item title="一致性 Consistency" name="1">
+                    <el-form :model="transferForm" ref="transferForm" label-width="100px" :rules="transferRules"
+                             hide-required-asterisk style="padding:20px;width: 500px">
+                        <el-form-item prop="staffId" label="工号">
+                            <el-input v-model="transferForm.staffId" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="姓名" prop="name">
+                            <el-input v-model="transferForm.name" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="部门" prop="departmentId">
+                            <el-select v-model="transferForm.departmentId"
+                                       @change="updateDepartmentJobList"
+                                       placeholder="请选择" style="width: 400px">
+                                <el-option
+                                        v-for="item in departmentList"
+                                        :key="item.departmentId"
+                                        :label="item.name"
+                                        :value="item.departmentId">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="职务" prop="jobId">
+                            <el-select v-model="transferForm.jobId" style="width: 400px">
+                                <el-option
+                                        v-for="item in departmentJobList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="transferStaff('transferForm')">确 定</el-button>
+                        </el-form-item>
+                    </el-form>
 
-                        </el-collapse-item>
-                        <el-collapse-item title="反馈 Feedback" name="2">
-
-                        </el-collapse-item>
-                    </el-collapse>
                 </el-tab-pane>
                 <el-tab-pane label="员工离职">
+                    <el-divider content-position="left">员工离职</el-divider>
+                    <el-form :model="resignationForm" ref="resignationForm" label-width="100px"
+                             :rules="resignationRules"
+                             hide-required-asterisk style="padding:20px;width: 500px">
+                        <el-form-item label="工号" prop="staffId">
+                            <el-input v-model="resignationForm.staffId" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="姓名" prop="name">
+                            <el-input v-model="resignationForm.name" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="原因" prop="reason">
+                            <el-select v-model="resignationForm.reason" style="width: 400px">
+                                <el-option
+                                        v-for="item in reasonList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="离职日期" prop="leaveDate">
+                            <el-date-picker
+                                    v-model="resignationForm.leaveDate"
+                                    value-format="yyyy-MM-dd"
+                                    type="date"
+                                    placeholder="选择日期"
+                                    style="width: 400px"
+                                    :picker-options="pickerOptions">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="说明" prop="content">
+                            <el-input v-model="resignationForm.content" type="textarea" :rows="4"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="danger" @click="dismissStaff('resignationForm')">确 定</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <el-divider content-position="left">待离职员工列表</el-divider>
+                    <el-table
+                            :data="leavingList"
+                            stripe
+                            style="margin:auto;width: 90%">
+                        <el-table-column
+                                prop="staffId"
+                                label="职工号"
+                                sortable>
+                        </el-table-column>
+                        <el-table-column
+                                prop="name"
+                                label="姓名">
+                        </el-table-column>
+                        <el-table-column
+                                prop="departmentName"
+                                label="部门"
+                                :filters="departmentFilterList"
+                                :filter-method="departmentFilter"
+                                filter-placement="bottom-end">
+                        </el-table-column>
+                        <el-table-column
+                                prop="leaveDate"
+                                sortable
+                                label="离职日期">
+                        </el-table-column>
+                    </el-table>
                 </el-tab-pane>
             </el-tabs>
             <el-dialog
@@ -233,10 +324,16 @@
                 }
             };
             return {
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now() - 8.64e7;
+                    },
+                },
                 stepNumber: 1,
                 drawer: false,
                 deleteStaffId: '',
                 showDeleteDialog: false,
+                reasonList: [],
                 sexList: [{
                     value: '0',
                     label: '男'
@@ -255,9 +352,30 @@
                 departmentList: [],
                 departmentJobList: [],
                 departmentFilterList: [],
-                createForm: {departmentId: ''},
+                createForm: {
+                    name: '',
+                    sex: '',
+                    birthday: '',
+                    nation: '',
+                    politicalStatus: '',
+                    education: '',
+                    school: '',
+                    departmentId: '',
+                    type: '',
+                    jobId: '',
+                    grade: '',
+                    hireDate: '',
+                    contractStart: '',
+                    contractLength: '',
+                    email: '',
+                    phoneNumber: '',
+                    address: ''
+                },
+                transferForm: {staffId: '', name: '', departmentId: '', jobId: ''},
+                resignationForm: {staffId: '', name: '', reason: '', leaveDate: '', content: ''},
                 pendingList: [],
-                rules: {
+                leavingList: [],
+                createRules: {
                     name: [
                         {required: true, message: '请输入职工姓名', trigger: 'blur'},
                     ],
@@ -309,9 +427,94 @@
                         {validator: checkPhone, trigger: ['blur', 'change']}
                     ],
                 },
+                transferRules: {
+                    staffId: [
+                        {required: true, message: '请输入职工工号', trigger: 'blur'},
+                    ],
+                    name: [
+                        {required: true, message: '请输入职工姓名', trigger: 'blur'},
+                    ],
+
+                    jobId: [
+                        {required: true, message: '请选择职务', trigger: 'change'},
+                    ],
+                },
+                resignationRules: {
+                    staffId: [
+                        {required: true, message: '请输入职工工号', trigger: 'blur'},
+                    ],
+                    name: [
+                        {required: true, message: '请输入职工姓名', trigger: 'blur'},
+                    ],
+                    reason: [
+                        {required: true, message: '请选择原因', trigger: 'change'},
+                    ],
+                    leaveDate: [
+                        {required: true, message: '请选择日期', trigger: 'blur'},
+                    ],
+                },
             }
         },
         methods: {
+            transferStaff(form) {
+                let that = this;
+                let grade;
+                for (let i = 0; i < this.departmentJobList.length; i++) {
+                    if (this.departmentJobList[i].id === this.transferForm.jobId) {
+                        grade = this.departmentJobList[i].grade;
+                        break;
+                    }
+                }
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        that.$http.post("/staff/transfer", {
+                            'staffId': that.transferForm.staffId,
+                            'name': that.transferForm.name,
+                            'departmentId': that.transferForm.departmentId,
+                            'jobId': that.transferForm.jobId,
+                            'grade': grade,
+                        }).then(function (res) {
+                                if (res.data.status === 'ok') {
+                                    that.$message({message: "调动完成", type: "success"});
+                                } else if (res.data.status === 'wrong') {
+                                    that.$message({message: "调动失败，工号与姓名不匹配", type: "error"});
+                                } else {
+                                    that.$message({message: "修改出错，请稍后再试。", type: "error"});
+                                }
+                            }
+                        )
+                    }
+                })
+            },
+            dismissStaff(form) {
+                let that = this;
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        that.$http.post("/staff/dismiss", {
+                            'staffId': that.resignationForm.staffId,
+                            'name': that.resignationForm.name,
+                            'reason': that.resignationForm.reason,
+                            'leaveDate': that.resignationForm.leaveDate,
+                            'content': that.resignationForm.content,
+                        }).then(function (res) {
+                                if (res.data.status === 'ok') {
+                                    that.$message({message: "完成离职", type: "success"});
+                                } else if (res.data.status === 'wrong') {
+                                    that.$message({message: "工号与姓名不匹配", type: "error"});
+                                } else {
+                                    that.$message({message: "修改出错，请稍后再试。", type: "error"});
+                                }
+                            }
+                        )
+                    }
+                })
+            },
+            resetForms() {
+                this.departmentJobList = [];
+                this.$refs.transferForm.resetFields();
+                this.$refs.createForm.resetFields();
+                this.$refs.resignationForm.resetFields();
+            },
             schedule(row) {
                 if (row.status === 'create') {
                     this.stepNumber = 1;
@@ -320,10 +523,10 @@
                 } else this.stepNumber = 3;
                 this.drawer = true;
             },
-            updateDepartmentJobList() {
+            updateDepartmentJobList(row) {
                 let list = [];
                 for (let i = 0; i < this.jobList.length; i++) {
-                    if (this.jobList[i].departmentId === this.createForm.departmentId) {
+                    if (this.jobList[i].departmentId === row) {
                         list.push(this.jobList[i]);
                     }
                 }
@@ -363,6 +566,7 @@
                             'address': that.createForm.address,
                         }).then(function (res) {
                                 if (res.data.status === 'ok') {
+                                    //TODO: 刷新路由
                                     that.$message({message: "创建成功", type: "success"});
                                 } else {
                                     that.$message("创建出错，请稍后再试。");
@@ -394,7 +598,7 @@
                 this.deleteStaffId = row.staffId;
                 this.showDeleteDialog = true;
             },
-            pendingFilter(value, row) {
+            departmentFilter(value, row) {
                 return row.departmentId === value;
             },
         },
@@ -433,6 +637,28 @@
                     that.$message("加载出错，请稍后再试。");
                 }
             });
+            this.$http.get("/staff/dismiss/reason",).then(function (res) {
+                if (res.data.status === 'ok') {
+                    that.reasonList = JSON.parse(res.data.content);
+                } else {
+                    that.$message("加载出错，请稍后再试。");
+                }
+            });
+            this.$http.get('/staff/leaving/list').then(function (res) {
+                if (res.data.status === 'ok') {
+                    let data = JSON.parse(res.data.content);
+                    for (let i = 0; i < data.length; i++) {
+                        for (let j = 0; j < that.departmentList.length; j++) {
+                            if (data[i].departmentId === that.departmentList[j].departmentId) {
+                                data[i].departmentName = that.departmentList[j].name;
+                            }
+                        }
+                    }
+                    that.leavingList = JSON.parse(JSON.stringify(data));
+                } else {
+                    that.$message("加载出错，请稍后再试。");
+                }
+            });
         }
     }
 </script>
@@ -449,5 +675,7 @@
 
     .body {
         background-color: #FFFFFF;
+        height: 600px;
+
     }
 </style>

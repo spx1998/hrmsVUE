@@ -61,7 +61,7 @@
                         </el-row>
                     </template>
                     <template slot-scope="scope">
-                        <el-button @click="staffDetail(scope.row)" style="margin-right: 15px;">详情</el-button>
+                        <el-button @click="staffDetail(scope.row)" style="margin-right: 15px;">详 情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
