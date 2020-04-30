@@ -15,8 +15,8 @@
                     <el-form-item label="姓名" prop="name">
                         <el-input v-model="staffDetail.name" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="性别" prop="sex">
-                        <el-select v-model="staffDetail.sex">
+                    <el-form-item label="性别" prop="sex" >
+                        <el-select v-model="staffDetail.sex" style="width: 320px">
                             <el-option
                                     v-for="item in sexList"
                                     :key="item.value"
@@ -27,7 +27,7 @@
                     </el-form-item>
                     <el-form-item label="部门" prop="departmentId">
                         <el-select v-model="staffDetail.departmentId"
-                                   @change="updateDepartmentJobList">
+                                   @change="updateDepartmentJobList" style="width: 320px">
                             <el-option
                                     v-for="item in departmentList"
                                     :key="item.departmentId"
@@ -38,7 +38,7 @@
                     </el-form-item>
                     <el-form-item label="职务" prop="jobId">
                         <el-select v-model="staffDetail.jobId"
-                                   @change="updateGrade">
+                                   @change="updateGrade" style="width: 320px">
                             <el-option
                                     v-for="item in departmentJobList"
                                     :key="item.id"
@@ -58,7 +58,7 @@
                                 v-model="staffDetail.birthday"
                                 type="date"
                                 value-format="yyyy-MM-dd"
-                                :placeholder=staffDetail.birthday>
+                                :placeholder=staffDetail.birthday style="width: 320px">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="政治面貌" prop="politicalStatus">

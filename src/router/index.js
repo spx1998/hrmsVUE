@@ -14,6 +14,12 @@ import Authority from "@/components/hrms/Authority";
 import Advertise from "@/components/personnel/Advertise";
 import PerformanceList from "@/components/performance/PerformanceList";
 import PerformanceHistory from "@/components/performance/PerformanceHistory";
+import Vacation from "@/components/performance/Vacation";
+import VacationApplication from "@/components/performance/VacationApplication";
+import Approve from "@/components/message/Approve";
+import Unread from "@/components/message/Unread";
+import Message from "@/components/message/Message";
+import ApplicationDetail from "@/components/message/ApplicationDetail";
 
 Vue.use(Router);
 const index = [
@@ -98,7 +104,40 @@ const index = [
                     path: '/performancehistory',
                     name: 'PerformanceHistory',
                     component: PerformanceHistory,
-                }
+                }, {
+                    path: '/绩效考勤',
+                    name: 'Vacation',
+                    component: Vacation,
+                }, {
+                    path: '/vacation',
+                    name: 'Vacation',
+                    component: Vacation,
+                }, {
+                    path: '/vacation/application',
+                    name: VacationApplication,
+                    component: VacationApplication,
+                }, {
+                    path: '/approve',
+                    name: Approve,
+                    component: Approve,
+                }, {
+                    path: '/unread',
+                    name: Unread,
+                    component: Unread,
+                }, {
+                    path: '/message',
+                    name: Message,
+                    component: Message,
+                }, {
+                    path: '/消息中心',
+                    name: Unread,
+                    component: Unread,
+                }, {
+                    path: '/applicationdetail/:id',
+                    name: ApplicationDetail,
+                    component: ApplicationDetail,
+                },
+
             ]
         }
     ]

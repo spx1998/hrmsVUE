@@ -23,7 +23,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="remark"
-                        label="备注">
+                        label="备注" :show-overflow-tooltip="true">
                 </el-table-column>
             </el-table>
 
